@@ -1,0 +1,49 @@
+﻿@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework
+@using WebApplication2.Models
+@using WebApplication2.Repositories.SQLServer
+@using WebApplication2.Domain
+
+
+
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+    @Html.AntiForgeryToken()
+
+        <ul class="nav navbar-nav">
+            <li>@Html.ActionLink("About", "About", "Home")</li>
+        </ul>
+
+    <ul class="nav navbar-nav navbar-right">
+        <li>
+            @{
+                var user = new ApplicationUser();
+                Employee empdata = new Employee();
+                var name = "";
+            }
+            @if (Request.IsAuthenticated)
+            {
+                var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+                user = manager.FindById(User.Identity.GetUserId());
+                var serverrepo = new SQLServerEmployeeRepository();
+                empdata = serverrepo.GetFullEmployeeDataById(Guid.Parse(user.Id));
+                var lo = empdata.FirstName.ToLower();
+                var up = empdata.FirstName.ToUpper();
+                name = up[0] + lo.Substring(1, lo.Length - 1);
+            }
+            @Html.ActionLink("Hello " + name + "!", "Index", "Manage", routeValues: null, htmlAttributes: new {title = "Manage"})
+            @*  @Html.ActionLink("Hello " + User.Identity.Name + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })             *@
+        </li>
+        <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+    </ul>
+    }
+}
+else
+{   
+    <ul class="nav navbar-nav navbar-right">
+        <li>@Html.ActionLink("About", "About", "Home")</li>
+        <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+    </ul>
+}

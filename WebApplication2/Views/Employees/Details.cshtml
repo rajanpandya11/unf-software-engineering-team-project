@@ -1,0 +1,114 @@
+﻿@model WebApplication2.Domain.Employee
+
+@{
+    ViewBag.Title = Model.FirstName + " " + Model.LastName;
+}
+
+<h2>@Model.FirstName @Model.LastName</h2>
+
+<div>
+    <h4>Employee</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+
+        @*<dt>
+            @Html.DisplayNameFor(model => model.Role)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Role)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BirthDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BirthDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.JoinedDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.JoinedDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NoOfCompletedTasks)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NoOfCompletedTasks)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NoOfSuccessfulProjects)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NoOfSuccessfulProjects)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NoOfLateFinishedTasks)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NoOfLateFinishedTasks)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NoOfLateFinishedProjects)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NoOfLateFinishedProjects)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NoOfOnGoingTasks)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NoOfOnGoingTasks)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NoOfOnGoingProjects)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NoOfOnGoingProjects)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NoOfArchivedProjects)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NoOfArchivedProjects)
+        </dd>*@
+
+    </dl>
+</div>
+<p>
+   @* @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |*@
+    @Html.ActionLink("Back to List", "Index")
+</p>

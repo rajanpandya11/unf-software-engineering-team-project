@@ -1,0 +1,51 @@
+﻿@model List<DotNet.Highcharts.Highcharts>
+@{
+    ViewBag.Title = "Charts page";
+}
+
+<div class="btn-group" data-toggle="buttons">
+    <label class="btn btn-default active">
+        <input type="radio" name="all-charts" value="1" autocomplete="off" checked="">
+        <i class="fa fa-bar-chart"></i>
+        Column Chart
+    </label>
+    <label class="btn btn-default active">
+        <input type="radio" name="all-charts" value="2" autocomplete="off" />
+        <i class="fa fa-pie-chart"></i>
+        Pie Chart 
+    </label>
+</div>
+
+<div id="chart-1" style="min-width: 80%; height: 60%; margin: 0 0; display: initial">
+    @Html.Partial("ColumnChart", @Model[0])
+</div>
+
+<div id="chart-2" style="min-width: 80%; height: 60%; margin: 0 0; display: none">
+    @Html.Partial("PieChart", @Model[1])
+</div> 
+
+<div id="chart-1" style="min-width: 80%; height: 60%; margin: 0 0; display: initial">
+    @Html.Partial("ColumnChart2", @Model[2])
+</div>
+
+@section scripts
+{
+    <script>
+        $(document)
+            .ready(function () {
+                $("input[name='all-charts']").change(function() {
+                    var mode = this.value,
+                        chart1 = $("#chart-1"),
+                        chart2 = $("#chart-2");
+                    if (mode === "1") {
+                        chart1.show();
+                        chart2.hide();                    
+                    }
+                    if (mode === "2") {
+                        chart1.hide();
+                        chart2.show();
+                    }                    
+                });
+        });
+    </script>
+}

@@ -1,0 +1,168 @@
+﻿body {
+    background-color: lightgray;
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+h2{
+    font-weight: bold;
+}
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+a {
+    -webkit-transition: all 0.35s;
+    -moz-transition: all 0.35s;
+    transition: all 0.35s;
+    color: darkblue;
+}
+
+.pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus {
+    margin-top: 0;
+    z-index: 3;
+    color: white;
+    background-color: darkblue;
+    border-color: darkblue;
+    cursor: default;
+}
+
+thead tr{
+    background-color: #FFF;
+
+}
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: #fff;
+}
+.table-striped > tbody > tr:nth-of-type(even) {
+    background-color: #fff;
+}
+/*
+.fa fa-pencil{
+    color: black;
+
+}*/
+.i.fa.fa-plus{
+    color: darkblue;
+}
+a:hover,
+a:focus {
+    /*  color: #eb3812;*/
+    color: #77b3ff;
+}
+hr {
+    border-color: black;
+    border-width: 3px;
+    max-width: 1200px;
+}
+.btn-default {
+    color: white;
+    background-color: darkblue;
+    border-color: darkblue; 
+    -webkit-transition: all 0.35s;
+    -moz-transition: all 0.35s;
+    transition: all 0.35s;
+    border-radius: 0;
+}
+.btn-defualt:hover {
+    margin-top: 0;
+    background-color: darkblue;
+    color: #77b3ff;
+}
+.btn-default active{
+    color: darkblue;
+
+}
+.btn-link
+{
+    color: darkblue;
+}
+.btn.btn-link:focus {
+    color: #77b3ff;
+}
+.btn-link js-priority{
+    color: darkblue;
+}
+.btn-link js-remove:hover {
+    margin-top: 0;
+    background-color: darkblue;
+    color: #77b3ff;
+}
+.btn-primary {
+    color: white;
+    background-color: darkblue;
+    border-color: #F05F40;
+    -webkit-transition: all 0.35s;
+    -moz-transition: all 0.35s;
+    transition: all 0.35s;
+    border-radius: 0;
+}
+.btn-primary:hover {
+        margin-top: 0;
+        background-color: darkblue;
+        color: #77b3ff;
+    }
+.btn-info {
+    color: #fff;
+    background-color: #5bc0de;
+    border-color: #46b8da;
+    border-radius: 0;
+}
+/* Destroy button margin shift */
+
+.btn-link js-priority:hover {
+    margin-top: 0;
+    background-color: darkblue;
+    color: #77b3ff;
+}
+
+.btn:hover {
+    margin-top: 0;
+    background-color: darkblue;
+    color: #77b3ff;
+}
+
+
+/* Navbar stuff */
+.navbar {
+    border-width: 0;
+}
+.navbar-fixed-top {
+    background-color: darkblue;
+}
+.navbar-inverse {
+    background-color: darkblue;
+    border-color: #e6e6e6;
+}
+.navbar-inverse .navbar-nav > li > a {
+    color: white;
+}
+.navbar-inverse .navbar-brand {
+    color: white;
+}
+
+/* Navbar link hover color */
+.navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:focus {
+    color: #77b3ff;
+}
+.navbar-inverse .navbar-brand:hover, .navbar-inverse .navbar-brand:focus {
+	color: #77b3ff;
+}
+/*text-primary {
+    color: darkblue;
+}*/
+/*.text-primary:hover {
+    color: #77b3ff;
+}*/
+
+

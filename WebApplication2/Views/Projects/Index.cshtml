@@ -1,0 +1,157 @@
+﻿@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework
+@using WebApplication2.Domain
+@using WebApplication2.Models
+@using WebApplication2.Repositories.SQLServer
+@model WebApplication2.Domain.ProjectIndexModel
+
+@{
+    ViewBag.Title = "Projects Page";
+}
+
+@functions {
+    public static HtmlString giveUserName(String userId)
+    {
+        var user = new ApplicationUser();
+        Employee empdata = new Employee();
+        var name = "";
+        var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+        user = manager.FindById(userId);
+        var serverrepo = new SQLServerEmployeeRepository();
+        empdata = serverrepo.GetFullEmployeeDataById(Guid.Parse(user.Id));
+        var lo = empdata.FirstName.ToLower();
+        var up = empdata.FirstName.ToUpper();
+        name = up[0] + lo.Substring(1, lo.Length - 1);
+
+        return new HtmlString(name);
+    }
+}
+
+<br />
+
+<h2>Projects</h2>
+
+@if (User.IsInRole("Department Manager"))
+{
+    <p>
+        @Html.ActionLink("Create New", "Create", "Projects", null, new { @class = "btn btn-primary" })
+    </p>
+}
+
+@if (User.IsInRole("Manager"))
+{
+    <p>
+        @Html.ActionLink("Request New", "Request", "Projects", null, new { @class = "btn btn-primary" })
+    </p>
+}
+
+
+    <h3>Your Projects</h3>
+    @if(Model.YourProjects != null && Model.YourProjects.Count != 0) {
+    <div class="container-fluid">
+        <table id="projects" class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Project</th>
+                    <th>Change</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.YourProjects)
+                {
+                    <tr class="active">
+                        <td>
+                            <a class="btn btn-link" href="~/projects/details/@item.pid">@item.Name</a>
+                        </td>
+                        <td>
+                            @*<a href="~/projects/edit/@item.pid" class="btn">Edit</a>*@
+                            <button class="btn-link js-edit" value="@item.pid">Edit</button>
+                            <button class="btn-link js-remove" value="@item.pid">Remove</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <h4 class="panel">Hey, @giveUserName(User.Identity.GetUserId()) ! You are not assigned to any projects at the moment. <i class="fa fa-frown-o" style="color: darkgrey"></i> </h4>
+}
+
+<h3>Unapproved Projects</h3>
+@if (Model.UnapprovedProject != null && Model.UnapprovedProject.Count != 0)
+{
+    <div class="container-fluid">
+        <table id="unapproved" class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Project</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.UnapprovedProject)
+                {
+                    <tr class="active">
+                        <td>
+                            <a class="btn btn-link">@item.Name</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <h4 class="panel">No unapproved projects.</h4>
+}
+
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+
+            $("#projects").DataTable();
+            $("#unapproved").DataTable();
+
+            $("#projects").on("click", ".js-remove",
+                function () {
+                    var item = $(this).attr('value');
+
+                    $.ajax({
+                        url: '/projects/DeleteConfirmed',
+                        type: 'POST',
+                        async: false,
+                        datatype: 'text',
+                        processdata: false,
+                        data: {
+                            id: item
+                        },
+                        success: function () {
+                            window.location.href = '/projects/index/';
+                        }
+                    });
+                });
+
+            $("#projects").on("click",
+                ".js-edit",
+                function() {
+                    var item = $(this).attr('value');
+
+                    $.ajax({
+                        url: '/projects/edit/' + item,
+                        type: 'GET',
+                        async: false,
+                        datatype: 'text',
+                        processdata: false,
+                        data: null,
+                        success: function () {
+                            window.location.href = '/projects/edit/' + item;
+                        }
+                    });
+                });
+        });
+    </script>
+}

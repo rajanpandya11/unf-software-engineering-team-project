@@ -1,0 +1,93 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>@ViewBag.Title - rekrdd</title>
+
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/lib")
+    @Scripts.Render("~/bundles/highcharts")
+
+    <link href="@Url.Content("~/Content/themes/base/jquery-ui.min.css")" rel="stylesheet" />
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body id="page-top">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("rekrdd", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                
+            </div>
+            <div class="navbar-collapse collapse">
+
+                <!-- Generate the links based on the user's registered role. -->
+                
+                @if (Request.IsAuthenticated)
+                {
+                    if(User.IsInRole("Admin"))
+                    {
+                        <ul class="nav navbar-nav">
+                            <li>@Html.ActionLink("User Manager", "Index", "Role")</li>
+                            <li>@Html.ActionLink("Data Importer", "Index", "DataImport")</li>
+                        </ul>
+                    }
+                    else if(!User.IsInRole("Admin"))
+                    {
+                        <ul class="nav navbar-nav">
+                            <li>@Html.ActionLink("Projects", "Index", "Projects")</li>
+                        </ul>
+                        <ul class="nav navbar-nav">
+                            <li>@Html.ActionLink("Charts", "Index", "Charts")</li>
+                        </ul>
+                    }
+                    if (User.IsInRole("Admin"))
+                    {
+                        <ul class="nav navbar-nav">
+                            <li>@Html.ActionLink("Requests", "Requests", "Role")</li>
+                        </ul>
+                    }
+                    if (User.IsInRole("Department Manager"))
+                    {
+                        <ul class="nav navbar-nav">
+                            <li>@Html.ActionLink("Requests", "ProjectRequests", "Projects")</li>
+                        </ul>
+                    }
+                }
+
+
+                @Html.Partial("_LoginPartial")
+                
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - rekrdd Inc.</p>
+        </footer>
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>

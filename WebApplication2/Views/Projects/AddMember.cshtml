@@ -1,0 +1,77 @@
+﻿@using WebApplication2.Migrations
+@model WebApplication2.ViewModels.AddMemberProjectViewModel
+@{
+    ViewBag.Title = "AddMember";
+}
+
+<h2>AddMember</h2>
+@{
+//var count = 0;
+//List<int> numberList = new List<int>();
+//foreach (var item in Model)
+//{
+//    numberList.Add(count++);
+//}
+
+    @*@Html.DropDownList("Select any", new SelectList(Model.AsEnumerable(), numberList, "FirstName"), "Select a member", new {@class = "form-control"})*@
+    <div class="text-center">
+        <i class="fa fa-chevron-circle-left glyphicon glyphicon-align-center" style="color: darkblue" aria-hidden="true"></i>
+        @Html.ActionLink(
+            linkText: "Back to Details",
+            actionName: "Details",
+            controllerName: "Projects",
+            routeValues: new
+            {
+                id = Model.ProjectId
+            },
+            htmlAttributes: null
+            )
+    </div>
+
+    <div id="members">
+        <select class="form-control" data-val="true" data-val-number="The field Priority Type must be a number." data-val-required="Add a member field is required." id="MemberId">
+            @{
+                var count = 0;
+                <option id="">Select a member</option>
+                foreach (var item in Model.Employees)
+                {
+                    count++;
+                    <option id="options" value="@count" data-emp-id="@item.uidstring">@item.FirstName @item.LastName </option>
+                }
+            }
+        </select>
+        <button type="submit" class="btn btn-primary js-submit">Add</button>
+    </div>
+}
+
+@section scripts{
+    <script>
+        $(document)
+            .ready(function () {
+                var selectedItem;
+                var myuid;
+                $("#MemberId").change(
+                    function() {                       
+                        myuid = $('option:selected', this).attr('data-emp-id');
+                    });
+                $("#members").on("click", ".js-submit",
+                    function() {
+                        var item = $("#data-emp-id");
+                        $.ajax({
+                            url: '/projects/AddMember',
+                            type: 'POST',
+                            async: false,
+                            datatype: 'text',
+                            processdata: false,
+                            data: {
+                                pid: @Model.ProjectId,
+                                guid: myuid
+                            },
+                            success: function() {
+                                window.location.href = '/projects/details/' + @Model.ProjectId;
+                            }
+                        });
+                    });
+            });
+    </script>
+}

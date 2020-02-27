@@ -1,0 +1,237 @@
+﻿@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework
+@using WebApplication2.Domain
+@using WebApplication2.Models
+@using WebApplication2.Repositories.SQLServer
+@model WebApplication2.ViewModels.TasksListProjectViewModel
+
+@{
+    ViewBag.Title = "NewIndex";
+}
+@functions
+{
+    private Guid currentGuid()
+    {
+        var user = new ApplicationUser();
+        var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+        user = manager.FindById(User.Identity.GetUserId());
+        return Guid.Parse(user.Id);
+    }
+
+    private String goodName(String input)
+    {
+        if (String.IsNullOrEmpty(input))
+            throw new ArgumentException("ARGH!");
+        return input.First().ToString().ToUpper() + String.Join("", input.Skip(1));
+    }
+
+    private String getName(Guid guid)
+    {
+        Employee empdata = new Employee();
+        var name = "";
+        var serverrepo = new SQLServerEmployeeRepository();
+        empdata = serverrepo.GetFullEmployeeDataById(guid);
+        String first = goodName((String)empdata.FirstName);
+        String last = goodName((String)empdata.LastName);
+        name = first + " " + last;
+        return name;
+    }
+}
+
+<h2>Tasks</h2>
+
+<i class="fa fa-plus" style="color: /*#F05F40;*/darkblue" aria-hidden="true"></i>
+@Html.ActionLink(
+    linkText: "Add task",
+    actionName: "Create",
+    controllerName: "ProjectTasks",
+    routeValues: new
+    {
+        pid = Model.pid,
+        guid = currentGuid()
+    },
+    htmlAttributes: null
+    )
+<br />
+
+<div><br /></div>
+
+<div>
+    <h2>My Tasks</h2>
+    <table id="team" class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Due on</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var task in Model.UserTasks)
+            {
+                <tr>
+                    <td><button class="btn-link js-priority">@task.Name</button></td>
+                    <td>@task.Description</td>
+                    <td>@task.DueOn.ToString("D")</td>
+                    <td><button class="btn-link js-finish" value="@task.Tid">Finish</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div>
+    <h2>Active Tasks</h2>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Started</th>
+                <th>Assigned to</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var task in Model.OpenTasks)
+            {
+                <tr>
+                    <td><button class="btn-link js-priority">@task.Name</button></td>
+                    <td>@task.Description</td>
+                    <td>@task.DueOn.ToString("D")</td>
+                    @if (task.Uid != null)
+                    {
+                        <td>@getName(task.Uid)</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div>
+    <h2>Other's Tasks</h2>    
+    <table class="table table-striped table-hover">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Started</th>
+            <th>Assigned to</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var task in Model.OtherTasks)
+        {
+            <tr>
+                <td><button class="btn-link js-priority">@task.Name</button></td>
+                <td>@task.Description</td>
+                <td>@task.DueOn.ToString("D")</td>
+                @if (task.Uid != null)
+                {
+                    <td>@getName(task.Uid)</td>
+                }
+            </tr>
+        }
+        </tbody>
+
+    </table>
+</div>
+
+<div>
+    <h2>Closed Tasks</h2>
+    <table class="table table-striped table-hover">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Started</th>
+            <th>Assigned to</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var task in Model.ClosedTasks)
+        {
+            <tr>
+                <td><button class="btn-link js-priority">@task.Name</button></td>
+                <td>@task.Description</td>
+                <td>@task.DueOn.ToString("D")</td>
+                @if (task.Uid != null)
+                {
+                    <td>@getName(task.Uid)</td>
+                }
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+
+
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+
+            $("#my-task").DataTable();
+            $("#other-task").DataTable();
+            $("#open-task").DataTable();
+            $("#finished-task").DataTable();
+
+            $("input[name$='tasks']").click(function() {
+                var test = $(this).val();
+
+                $("div.desc").hide();
+                $("#tasks" + test).show();
+            });
+
+            $("#team").on("click", ".js-finish",
+                function() {
+                    var item = $(this).attr('value');
+                    $.ajax({
+                        url: '/projecttasks/finishtask',
+                        type: 'POST',
+                        async: false,
+                        datatype: 'text',
+                        processdata: false,
+                        data: {
+                            tid: item
+                        },
+                        success: function() {
+                            window.location.href = '/projects/details/' + @Model.pid;
+                        }
+                    });
+                });
+
+            //$("input[name='all-tasks']").change(function () {
+            //    var mode = this.value,
+            //        mytask = $("#mytask"),
+            //        opentask = $("#opentask"),
+            //        othertask = $("#othertask"),
+            //        finishedtask = $("#finishedtask");
+            //    //mytask.show();
+            //    if (mode === "my") {
+            //        mytask.show();
+            //        opentask.hide();
+            //        othertask.hide();
+            //        finishedtask.hide();
+            //    } else if (mode === "open") {
+            //        opentask.show();
+            //        mytask.hide();
+            //        othertask.hide();
+            //        finishedtask.hide();
+            //    } else if (mode === "other") {
+            //        mytask.hide();
+            //        opentask.hide();
+            //        finishedtask.hide();
+            //        othertask.show();
+            //    } else {
+            //        mytask.hide();
+            //        opentask.hide();
+            //        othertask.hide();
+            //        finishedtask.show();
+            //    }
+            //});
+        });
+    </script>
+}
